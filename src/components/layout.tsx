@@ -16,14 +16,17 @@ export default function Layout({ children }: { children: ReactNode }) {
   if (status === "loading") return <p>Loading...</p>;
 
   return (
-    <div>
-      <nav className="p-4 bg-gray-800 text-white">
-        <h1 className="text-xl">TaskPlanner</h1>
-        <button onClick={() => signOut({ callbackUrl: "/login" })} className="bg-red-500 px-4 py-2 rounded">
+    <div className="min-h-screen bg-gray-100">
+      <nav  className="bg-blue-600 text-white p-4 shadow-md flex justify-between items-center">
+        <h1 className="text-2xl font-semibold tracking-wide">TaskPlanner</h1>
+        <button 
+          onClick={() => signOut({ callbackUrl: "/login" })} 
+          className="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition duration-300"
+        >
           Logout
         </button>        
       </nav>
-      <main className="p-4">{children}</main>
+      <main className="p-6">{children}</main>
     </div>
   );
 }
