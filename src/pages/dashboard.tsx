@@ -3,6 +3,7 @@
 import { useSession } from "next-auth/react";
 import { useRouter } from "next/navigation";
 import { useEffect } from "react";
+import LogoutButton from "@/components/logout";
 
 export default function DashboardPage() {
   const { data: session, status } = useSession();
@@ -16,5 +17,10 @@ export default function DashboardPage() {
 
   if (status === "loading") return <p>Loading...</p>;
 
-  return <h1>Welcome, {session?.user?.email}!</h1>;
+  return (
+    <div>
+        <h1>Welcome, {session?.user?.email}!</h1>
+        <LogoutButton />
+    </div>
+  );
 }
