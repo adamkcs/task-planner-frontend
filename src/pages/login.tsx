@@ -1,35 +1,70 @@
+"use client";
+
 import { signIn } from "next-auth/react";
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 
-export default function Login() {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+export default function LoginPage() {
+  const router = useRouter();
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
 
-  const handleLogin = async (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    await signIn("credentials", { email, password, callbackUrl: "/dashboard" });
+    setLoading(true);
+    setError("");
+
+    const formData = new FormData(e.currentTarget);
+    const email = formData.get("email") as string;
+    const password = formData.get("password") as string;
+
+    const result = await signIn("credentials", {
+      redirect: false,
+      email,
+      password,
+    });
+
+    if (result?.error) {
+      setError(result.error);
+      setLoading(false);
+    } else {
+      router.push("/dashboard"); // Redirect to dashboard on success
+    }
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-100">
-      <form onSubmit={handleLogin} className="bg-white p-6 rounded shadow-md">
-        <h2 className="text-xl font-semibold mb-4">Login</h2>
-        <input
-          type="email"
-          placeholder="Email"
-          className="border p-2 w-full mb-2"
-          onChange={(e) => setEmail(e.target.value)}
-        />
-        <input
-          type="password"
-          placeholder="Password"
-          className="border p-2 w-full mb-2"
-          onChange={(e) => setPassword(e.target.value)}
-        />
-        <button type="submit" className="bg-blue-500 text-white px-4 py-2 rounded">
-          Sign In
-        </button>
-      </form>
+    <div className="flex min-h-screen items-center justify-center bg-gray-100">
+      <div className="w-full max-w-md bg-white p-6 rounded-lg shadow-lg">
+        <h2 className="text-2xl font-bold text-center mb-4">Login</h2>
+        {error && <p className="text-red-500 text-center">{error}</p>}
+        <form onSubmit={handleSubmit} className="space-y-4">
+          <div>
+            <label className="block text-gray-700">Email</label>
+            <input
+              type="email"
+              name="email"
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <div>
+            <label className="block text-gray-700">Password</label>
+            <input
+              type="password"
+              name="password"
+              required
+              className="w-full p-2 border rounded"
+            />
+          </div>
+          <button
+            type="submit"
+            className="w-full bg-blue-500 text-white py-2 rounded"
+            disabled={loading}
+          >
+            {loading ? "Signing in..." : "Login"}
+          </button>
+        </form>
+      </div>
     </div>
   );
 }
