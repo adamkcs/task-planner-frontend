@@ -1,0 +1,8 @@
+import axios from "axios";
+
+export const api = axios.create({
+  baseURL: "localhost:4200",
+  withCredentials: true,
+});
+
+export default api;
