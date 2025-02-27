@@ -1,21 +1,13 @@
 "use client";
 
-import { useSession } from "next-auth/react";
-import { useRouter } from "next/navigation";
-import { useEffect } from "react";
-import LogoutButton from "@/components/logout";
+import { useAuth } from "@/context/AuthContext";
 
 export default function DashboardPage() {
-  const { data: session, status } = useSession();
-  const router = useRouter();
+    const { isAuthenticated } = useAuth();
 
-  useEffect(() => {
-    if (status === "unauthenticated") {
-      router.push("/login");
+    if (!isAuthenticated) {
+      return
     }
-  }, [status, router]);
-
-  if (status === "loading") return <p>Loading...</p>;
 
   return (
     <div className="max-w-4xl mx-auto mt-10">

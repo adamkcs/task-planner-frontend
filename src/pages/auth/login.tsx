@@ -10,6 +10,8 @@ export default function LoginPage() {
   const [error, setError] = useState("");
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
+    console.log("Rendering LoginPage...");
+
     e.preventDefault();
     setLoading(true);
     setError("");
@@ -64,6 +66,9 @@ export default function LoginPage() {
             {loading ? "Signing in..." : "Login"}
           </button>
         </form>
+        <p className="text-center mt-4">
+          Don't have an account? <a href="/auth/register" className="text-blue-500">Register</a>
+        </p>
       </div>
     </div>
   );
