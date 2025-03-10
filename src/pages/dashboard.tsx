@@ -1,14 +1,4 @@
-"use client";
-
-import { useAuth } from "@/context/AuthContext";
-
 export default function DashboardPage() {
-    const { isAuthenticated } = useAuth();
-
-    if (!isAuthenticated) {
-      return
-    }
-
   return (
     <div className="max-w-4xl mx-auto mt-10">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">📌 Your Tasks</h1>
