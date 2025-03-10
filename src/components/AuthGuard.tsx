@@ -1,29 +1,25 @@
-// components/AuthGuard.tsx
-import { useRouter } from 'next/router';
-import { useEffect } from 'react';
-import { useAuth } from '../context/AuthContext';
+import { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/context/AuthContext";
+import { ReactNode } from "react";
 
-// Define the props for the AuthGuard component
 interface AuthGuardProps {
-  children: React.ReactNode;
-}
+    children: ReactNode;
+  }
 
-const AuthGuard = ({ children }: AuthGuardProps) => {
-  const router = useRouter();
+export default function AuthGuard({ children }: AuthGuardProps) {
   const { isAuthenticated } = useAuth();
-
-  // Define public routes that don't require authentication
-  const publicRoutes = ['/auth/login', '/auth/register'];
+  const router = useRouter();
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
-    // If the user is not authenticated and the route is not public, redirect to login
-    if (!isAuthenticated && !publicRoutes.includes(router.pathname)) {
-      router.push('/auth/login');
+    if (isAuthenticated) {
+      setLoading(false);
+    } else {
+      router.push("/auth/login");
     }
-  }, [isAuthenticated, router.pathname]);
+  }, [isAuthenticated]);
 
-  // If authenticated or on a public route, render the children
-  return <>{children}</>;
-};
-
-export default AuthGuard;
+  if (loading) return <p>Loading...</p>; // Prevent flickering
+  return children;
+}

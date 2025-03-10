@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { useRouter } from "next/router";
+import { register } from "@/services/auth";
 
-const Register = () => {
+export default function RegistrationPage() {
   const [formData, setFormData] = useState({
     username: "",
     email: "",
@@ -19,18 +20,8 @@ const Register = () => {
     setError(null);
 
     try {
-      const response = await fetch("http://localhost:8080/api/auth/register", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(formData),
-      });
-
-      if (!response.ok) {
-        const errorData = await response.json();
-        throw new Error(errorData.message || "Registration failed");
-      }
-
-      router.push("/auth/login"); // Redirect to login page on success
+      await register(formData);
+      router.push("/auth/login");
     } catch (err: any) {
       setError(err.message);
     }
@@ -80,5 +71,3 @@ const Register = () => {
     </div>
   );
 };
-
-export default Register;
